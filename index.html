@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speedrun Dimensions</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-186350227-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-186350227-2');
+    </script>
+
+</head>
+<body>
+    <div id="gameWindow">
+        <div id="tabContainer" class="containerRow" style="margin: 0px 0px 10px 0px">
+            <div id="energyTab" class="container">
+                <p id="energyPointHeader" style="font-size: 12px; margin: 0px">0.00 EP</p>
+                <div id="energyBtn" onclick="changeTab('energy')" class="smallBtn" style="margin: 5px;">Energy</div>
+            </div>
+            <div id="prestigeTab" class="container">
+                <p id="prestigePointHeader" style="font-size: 12px; margin: 0px">0.00 PP</p>
+                <div id="prestigeBtn" onclick="changeTab('prestige')" class="smallBtn" style="margin: 5px;">Prestige</div>
+            </div>
+            <div id="settingsBtn" onclick="changeTab('settings')" class="smallBtn" style="margin: 21.1px 5px 5px 5px;">Settings</div>
+        </div>
+
+
+    
+        <div id="energyContainer" class="container">
+            <h4 id="energySpeedrunTimer" style="color: var(--invalidEdge)">Speedrun Timer: 0.00</h4>
+            <h4 id="energySpeedrunReward" style="margin: 0px 0px 10px 0px">Completing Now Rewards 1.00 PP</h4>
+
+            <h2 id="energyPointGoalDisplay" onclick="completeEnergyPointGoal()" style="margin: 0px 0px 10px 0px">Current Energy Goal: 10 Energy Points</h2>
+            <h3 id="energyPointDisplay" style="margin: 0px 0px 20px 0px">You Have 0.0 Energy Points</h3>
+            <div id="energyPointCrank" onclick="gainEnergyPoints(new Decimal(1))" class="normBtn" style="margin: 0px 0px 10px 0px">Energy Crank <br> <span id="energyPointCrankDisplay">Gain 1.0 Energy Point</span></div>
+            <div class="containerRow">
+                <div id="energyPointGenButton" onclick="energyPointGen.buy()" class="container smallBtn">
+                    <p>Energy Point Generator</p>
+                    <p id="energyPointGenSpeedDisplay">Generating 0.00 EP/s</p>
+                    <p id="energyPointGenCostDisplay">Next Purchase 10.00 EP</p>
+                    <p id="energyPointGenAmountDisplay">Bought: 0</p>
+                </div>
+            </div>
+        </div>
+        <h1 id="noCurrentSpeedrunDisplay" style="color: var(--invalidEdge)">You Are Not Currently In an Energy Speedrun, <br> Go to The Prestige Tab to Start One!</h1>
+
+
+
+        <div id="prestigeContainer" class="container">
+            <h2 id="prestigePointDisplay">You Have 0.0 Prestige Points</h2>
+            <h3 id="prestigeBoostDisplay">Your Prestige Points Create A 1.0x Boost To Energy Gain</h3>
+            <div class="containerRow">
+                <div class="roundBackground container">
+                    <h2>Prestige Shop</h2>
+                    <hr style="width: 80%; height: 0px; margin: 10px 0px 10px 0px">
+                    <div class="container" style="height: 140px; width: 90%; border: 2px solid var(--validEdge); border-radius: 5px; padding: 10px; margin: 10px 0px">
+                        <h3 id="prestigeUpgradeInfoBoxNum" style="color: var(--altText)">Displaying: Upgrade 1</h3>
+                        <hr style="width: 80%; height: 0px; margin: 5px 0px 15px 0px">
+                        <h4 id="prestigeUpgradeInfoBoxDesc" style="margin: 0px 0px 5px 0px; width: 100%">Unlocks An Auto-Complete Feature</h4>
+                        <h4 id="prestigeUpgradeInfoBoxEffect">Mult Effect: None</h4>
+                        <h4 id="prestigeUpgradeInfoBoxCost">Costs: 5.00 Prestige Points</h4>
+                        <h4 id="prestigeUpgradeInfoBoxBought">Bought: false</h4>
+                    </div>
+                    <div class="containerRow">
+                        <div style="margin: 3px">
+                            <div id="prestigeUpgradeBtn1" onclick="buyPrestigeUpgrade(1)" onmouseover="updatePrestigeUpgradeInfo(1)" class="smallBtn">01</div>
+                        </div>
+                        <div style="margin: 3px">
+                            <div id="prestigeUpgradeBtn2" onclick="buyPrestigeUpgrade(2)" onmouseover="updatePrestigeUpgradeInfo(2)" class="smallBtn">02</div>
+                        </div>
+                        <div style="margin: 3px">
+                            <div id="prestigeUpgradeBtn3" onclick="buyPrestigeUpgrade(3)" onmouseover="updatePrestigeUpgradeInfo(3)" class="smallBtn">03</div>
+                        </div>
+                        <div style="margin: 3px">
+                            <div id="prestigeUpgradeBtn4" onclick="buyPrestigeUpgrade(4)" onmouseover="updatePrestigeUpgradeInfo(4)" class="smallBtn">04</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="roundBackground container">
+                    <h2>Energy Speedruns</h2>
+                    <hr style="width: 80%; height: 0px; margin: 10px 0px 10px 0px">
+                    <p id="currentEnergySpeedrunDisplay">Current: Speedrun 1</p>
+                    <div id="toggleAutoEnergySpeedrunBtn" onclick="toggleBool(player.autoCompleteEnergySpeedrun,'autoCompleteEnergySpeedrun','toggleAutoEnergySpeedrun')" class="smallBtn">Auto-Complete:<span id="toggleAutoEnergySpeedrun">OFF</span></div>
+                    
+                    <div class="container" style="height: 100px; width: 90%; border: 2px solid var(--validEdge); border-radius: 5px; padding: 10px; margin: 10px 0px">
+                        <h3 id="energySpeedrunInfoBoxNum" style="color: var(--altText)">Displaying: Speedrun 1</h3>
+                        <hr style="width: 80%; height: 0px; margin: 5px 0px 15px 0px">
+                        <h4 id="energySpeedrunInfoBoxDesc">Get to 10 EP - Crank</h4>
+                        <h4 id="energySpeedrunInfoBoxLim">Time Limit: None</h4>
+                        <h4 id="energySpeedrunInfoBoxReward">(Rewards 1 PP)</h4>
+                    </div>
+                
+                    <div class="containerRow">
+                        <div class="container" style="margin: 3px 5px">
+                            <div onclick="startNewEnergySpeedrun(1)" onmouseover="updateEnergySpeedrunInfo(1)" class="smallBtn">Speedrun 1</div>
+                            <div onclick="startNewEnergySpeedrun(3)" onmouseover="updateEnergySpeedrunInfo(3)" class="smallBtn">Speedrun 3</div>
+                        </div>
+
+                        <div class="container" style="margin: 3px 5px">
+                            <div onclick="startNewEnergySpeedrun(2)" onmouseover="updateEnergySpeedrunInfo(2)" class="smallBtn">Speedrun 2</div>
+                            <div class="smallBtn">PLACEHOLDER</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="settingsContainer" class="container">
+            
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript" src="javascripts/break_infinity.js"></script>
+    <script type="text/javascript" src="javascripts/control.js"></script>
+    <script type="text/javascript" src="javascripts/format.js"></script>
+    <script type="text/javascript" src="javascripts/building.js"></script>
+
+    <script type="text/javascript" src="javascripts/tabsAndThemes.js"></script>
+    <script type="text/javascript" src="javascripts/player.js"></script>
+    <script type="text/javascript" src="javascripts/energy.js"></script>
+    <script type="text/javascript" src="javascripts/prestige.js"></script>
+    <script type="text/javascript" src="javascripts/loop.js"></script>
+    <script type="text/javascript" src="javascripts/display.js"></script>
+</body>

@@ -1,0 +1,146 @@
+html, body {
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    justify-content: center;
+    color: var(--text);
+    background-color: var(--background);
+}
+
+#gameWindow {
+    transform-origin: top center;
+    float: center;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0px 0px 0px;
+    padding: 0px;
+    text-align: center;
+    font-family: 'Roboto Mono', monospace;
+    user-select: none;
+    white-space: nowrap;
+}
+
+h2 {
+    margin: 0px;
+}
+
+h3 {
+    margin: 0px;
+}
+
+h4 {
+    margin: 0px;
+}
+
+p {
+    margin: 5px 0px 5px 0px;
+    font-size: 20px;
+}
+
+hr {
+    border: none;
+    border-top: 3px solid var(--text);
+    color: var(--text);
+    border-radius: 2px;
+}
+
+span {
+    margin: 0px 0px 0px 8px;
+}
+
+
+
+/*buttonsss*/
+.smallBtn {
+    min-height: 25px;
+    border: 2px solid var(--validEdge);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 10px;
+    margin: 0px;
+    transition: 0.1s;
+    background-color: var(--validFill);
+    min-width: 50px;
+    cursor: pointer;
+}
+
+.smallBtn:hover {
+    background-color: var(--hoverFill);
+}
+
+.normBtn {
+    min-height: 40px;
+    border: 2px solid var(--validEdge);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    margin: 0px;
+    transition: 0.1s;
+    background-color: var(--validFill);
+    min-width: 80px;
+    cursor: pointer;
+}
+
+.normBtn:hover {
+    background-color: var(--hoverFill);
+}
+
+
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+  
+.containerRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+
+.roundBackground {
+    background-color: var(--fieldBackground);
+    border-radius: 5px;
+    margin: 30px 20px 0px 20px;
+    width: 400px;
+    padding: 10px 0px;
+}
+
+
+
+.botMargin20 {
+    margin: 0px 0px 20px 0px;
+}
+
+
+
+
+
+
+
+
+:root {
+    --background: #000000;
+    --text: #000000;
+    --altText: #000000;
+    --boughtText: #000000;
+    --validEdge: #000000;
+    --invalidEdge: #000000;
+    --boughtEdge: #000000;
+    --validFill: #000000;
+    --invalidFill: #000000;
+    --boughtFill: #000000;
+    --hoverFill: #000000;
+    --fieldBackground: #000000;
+}
