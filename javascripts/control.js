@@ -66,6 +66,16 @@ function toggleBool(x,y,z) {
     }
 }
 
+function changeBoolDisplay(x,y) {
+    if (y !== undefined) {
+        let value = 'OFF';
+        if (x) {
+            value = 'ON';
+        }
+        updateText(y,value);
+    }
+}
+
 function pad(n, len) 
 {
     s = n.toString();
@@ -75,3 +85,7 @@ function pad(n, len)
     }    
     return s;
 }
+
+
+
+

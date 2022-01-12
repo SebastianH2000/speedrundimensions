@@ -16,6 +16,12 @@ class building {
     }
 
     buy () {
+        if (energyUpgrade2.bought) {
+            this.costScale = new Decimal(1.4);
+        }
+        else {
+            this.costScale = new Decimal(1.5);
+        }
         if (player.stateOfEnergySpeedrun === 'running' && (!player.currentEnergySpeedrun.equals(3) || this.name !== 'energyPointGen')) {
             this.cost = this.costScale.pow(this.amount).mul(this.costMult);
             if (player[this.currency].greaterThanOrEqualTo(this.cost)) {
@@ -26,24 +32,43 @@ class building {
     }
 
     calc() {
-        this.generating = ((this.amount).add(this.freeAmount)).mul(player.energyPointMult).mul(player.energyGenMult);
         let costSc = this.costScale;
         this.cost = costSc.pow(this.amount).mul(this.costMult);
     }
 
     update () {
-        if (prestigeUpgrade3.bought && energySpeedrunArr[player.currentEnergySpeedrun.sub(1)].featuresAllowed[1]) {
-            this.freeAmount = new Decimal(1);
+        if (energyUpgrade2.bought) {
+            this.costScale = new Decimal(1.4);
         }
         else {
-            this.freeAmount = new Decimal(0);
+            this.costScale = new Decimal(1.5);
         }
+
+        //calculating free generators
+        this.freeAmount = new Decimal(0);
+        if (energySpeedrunArr[player.currentEnergySpeedrun.sub(1)].featuresAllowed[1]) {
+            if (prestigeUpgrade3.bought) {
+                this.freeAmount = this.freeAmount.add(1);
+            }
+            if (prestigeUpgrade5.bought) {
+                this.freeAmount = this.freeAmount.add(prestigeUpgrade5.effect);
+            }
+        }  
 
         let costSc = this.costScale;
         this.cost = costSc.pow(this.amount).mul(this.costMult);
         if (this.currency === 'energyPoints') {
             this.generating = ((this.amount).add(this.freeAmount)).mul(player.energyPointMult).mul(player.energyGenMult);
-        }
+            if (energyUpgrade1.bought) {
+                this.generating = new Decimal.mul(this.generating,energyUpgrade1.effect);
+            }
+            if (energyUpgrade3.bought) {
+                this.generating = new Decimal.mul(this.generating,energyUpgrade3.effect);
+            }
+            if (energyUpgrade4.bought) {
+                this.generating = new Decimal.mul(this.generating,energyUpgrade4.effect);
+            }
+        } 
 
         if (this.displayed === true) {
             if (!(player[this.currency].greaterThanOrEqualTo(this.cost)) || player.currentEnergySpeedrun.eq(3)) {
@@ -74,7 +99,7 @@ class building {
 
 //prestige buildings
 class energySpeedrun {
-    constructor (speedrunNum, energyPointGoal, featuresAllowed, prestigeAward, maxTimer) {
+    constructor (speedrunNum, energyPointGoal, featuresAllowed, prestigeAward, maxTimer, displayed) {
         //features is an array with the following features mapped to their positions:
         //0: energy point crank, 1: energy point generator
         this.speedrunNum = speedrunNum;
@@ -86,6 +111,8 @@ class energySpeedrun {
             this.timer = this.maxTimer;
         }
         this.completions = new Decimal("0");
+        this.displayed = displayed;
+        this.realNum = this.speedrunNum.toNumber();
     }
 
     start() {
@@ -98,6 +125,10 @@ class energySpeedrun {
         player.stateOfEnergySpeedrun = 'running';
         energyPointGen.amount = new Decimal("0");
         energyPointGen.update();
+
+        for (let i = 0; i < energyUpgradeArr.length; i++) {
+            energyUpgradeArr[i].bought = false;
+        }
     }
 
     calc() {
@@ -112,6 +143,15 @@ class energySpeedrun {
                     this.reward = energySpeedrunRewards[this.speedrunNum.sub(1)];
                 }
             }
+        }
+    }
+
+    updateBtn() {
+        if (this.displayed) {
+            flexElement('energySpeedrunBtn' + this.realNum);
+        }
+        else {
+            hideElement('energySpeedrunBtn' + this.realNum);
         }
     }
 
@@ -171,6 +211,29 @@ class energySpeedrun {
         player.totalEnergySpeedrunCompletions = player.totalEnergySpeedrunCompletions.add(1);
         energyPointGen.amount = new Decimal(0);
         energySpeedrunArr[this.speedrunNum.sub(1)].start();
+
+        if ((this.realNum + 1) > player.energySpeedrunsUnlocked.toNumber() && (this.realNum + 1) <= energySpeedrunArr.length) {
+            console.log(this.realNum + 1);
+            player.energySpeedrunsUnlocked = new Decimal(this.realNum + 1);
+        }
+
+        if (this.realNum === 3 && player.prestigeUpgradesUnlocked.lt(6)) {
+            player.prestigeUpgradesUnlocked = new Decimal("6");
+
+            prestigeUpgrade5.displayed = true;
+            prestigeUpgrade6.displayed = true;
+        }
+
+        if (this.realNum === 4 && player.prestigeUpgradesUnlocked.lt(8)) {
+            player.prestigeUpgradesUnlocked = new Decimal("7");
+
+            prestigeUpgrade7.displayed = true;
+            //prestigeUpgrade8.displayed = true;
+        }
+
+        if (this.realNum === 4) {
+            player.energySpeedrun4Completions = player.energySpeedrun4Completions.add(1);
+        }
     }
 }
 
@@ -192,7 +255,7 @@ class prestigeUpgrade {
                 updateStyle('prestigeUpgradeBtn' + this.num,'color: var(--validText); border: 2px solid var(--validEdge)');
                 addClass('prestigeUpgradeBtn' + this.num, 'smallBtn');
             }
-            else if (player.prestigePoints.lte(this.cost)) {
+            else if (player.prestigePoints.lt(this.cost)) {
                 updateStyle('prestigeUpgradeBtn' + this.num,'background-color: var(--invalidFill); color: var(--invalidText); border: 2px solid var(--invalidEdge)')
             }
         }
@@ -212,3 +275,45 @@ class prestigeUpgrade {
         this.effect = value;
     }
 }
+
+
+
+class energyUpgrade {
+    constructor  (num, cost, displayed) {
+        this.num = num;
+        this.cost = cost;
+        this.bought = false;
+        this.displayed = displayed;
+    }
+
+    update() {
+        if (this.displayed && energySpeedrunArr[player.currentEnergySpeedrun.sub(1)].featuresAllowed[2]) {
+            flexElement('energyUpgradeBtn' + this.num);
+            if (this.bought) {
+                updateStyle('energyUpgradeBtn' + this.num,'background-color: var(--boughtFill); color: var(--boughtText); border: 2px solid var(--boughtEdge)')
+            }
+            else if (player.energyPoints.gte(this.cost)) {
+                updateStyle('energyUpgradeBtn' + this.num,'color: var(--validText); border: 2px solid var(--validEdge)');
+                addClass('energyUpgradeBtn' + this.num, 'smallBtn');
+            }
+            else if (player.energyPoints.lt(this.cost)) {
+                updateStyle('energyUpgradeBtn' + this.num,'background-color: var(--invalidFill); color: var(--invalidText); border: 2px solid var(--invalidEdge)')
+            }
+        }
+        else {
+            hideElement('energyUpgradeBtn' + this.num);
+        }
+    }
+
+    buy() {
+        if (player.energyPoints.gte(this.cost) && !this.bought) {
+            player.energyPoints = player.energyPoints.sub(this.cost);
+            this.bought = true;
+        }
+    }
+
+    effectSet(value) {
+        this.effect = value;
+    }
+}
+

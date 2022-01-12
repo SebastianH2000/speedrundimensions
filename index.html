@@ -46,11 +46,37 @@
             <h3 id="energyPointDisplay" style="margin: 0px 0px 20px 0px">You Have 0.0 Energy Points</h3>
             <div id="energyPointCrank" onclick="gainEnergyPoints(new Decimal(1))" class="normBtn" style="margin: 0px 0px 10px 0px">Energy Crank <br> <span id="energyPointCrankDisplay">Gain 1.0 Energy Point</span></div>
             <div class="containerRow">
-                <div id="energyPointGenButton" onclick="energyPointGen.buy()" class="container smallBtn">
-                    <p>Energy Point Generator</p>
-                    <p id="energyPointGenSpeedDisplay">Generating 0.00 EP/s</p>
-                    <p id="energyPointGenCostDisplay">Next Purchase 10.00 EP</p>
-                    <p id="energyPointGenAmountDisplay">Bought: 0</p>
+                <div id="energyPointGenButton" onclick="energyPointGen.buy()" class="container smallBtn" style="padding: 0px; font-size: 14px;">
+                    <p style="margin: 2px 0px; font-size: 20px;">Energy Point Generator</p>
+                    <p id="energyPointGenSpeedDisplay" style="margin: 1px 0px">Generating 0.00 EP/s</p>
+                    <p id="energyPointGenCostDisplay" style="margin: 1px 0px">Next Purchase 10.00 EP</p>
+                    <p id="energyPointGenAmountDisplay" style="margin: 1px 0px">Bought: 0</p>
+                </div>
+            </div>
+
+            <div id="energyUpgradeContainer" class="container roundBackground">
+                <div class="container" style="height: 140px; width: 90%; border: 2px solid var(--validEdge); border-radius: 5px; padding: 10px; margin: 10px 0px">
+                    <h3 id="energyUpgradeInfoBoxNum" style="color: var(--altText)">Displaying: Upgrade 1</h3>
+                    <hr style="width: 80%; height: 0px; margin: 5px 0px 15px 0px">
+                    <h4 id="energyUpgradeInfoBoxDesc" style="margin: 0px 0px 5px 0px; width: 100%">Unlocks An Auto-Complete Feature</h4>
+                    <h4 id="energyUpgradeInfoBoxEffect">Mult Effect: None</h4>
+                    <h4 id="energyUpgradeInfoBoxCost">Costs: 5.00 Prestige Points</h4>
+                    <h4 id="energyUpgradeInfoBoxBought">Bought: false</h4>
+                </div>
+
+                <div class="containerRow">
+                    <div style="margin: 3px" class="container">
+                        <div id="energyUpgradeBtn1" onclick="buyEnergyUpgrade(1)" onmouseover="updateEnergyUpgradeInfo(1)" class="smallBtn">01</div>
+                    </div>
+                    <div style="margin: 3px" class="container">
+                        <div id="energyUpgradeBtn2" onclick="buyEnergyUpgrade(2)" onmouseover="updateEnergyUpgradeInfo(2)" class="smallBtn">02</div>
+                    </div>
+                    <div style="margin: 3px" class="container">
+                        <div id="energyUpgradeBtn3" onclick="buyEnergyUpgrade(3)" onmouseover="updateEnergyUpgradeInfo(3)" class="smallBtn">03</div>
+                    </div>
+                    <div style="margin: 3px" class="container">
+                        <div id="energyUpgradeBtn4" onclick="buyEnergyUpgrade(4)" onmouseover="updateEnergyUpgradeInfo(4)" class="smallBtn">04</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,16 +100,19 @@
                         <h4 id="prestigeUpgradeInfoBoxBought">Bought: false</h4>
                     </div>
                     <div class="containerRow">
-                        <div style="margin: 3px">
+                        <div style="margin: 3px" class="containerY">
                             <div id="prestigeUpgradeBtn1" onclick="buyPrestigeUpgrade(1)" onmouseover="updatePrestigeUpgradeInfo(1)" class="smallBtn">01</div>
+                            <div id="prestigeUpgradeBtn5" onclick="buyPrestigeUpgrade(5)" onmouseover="updatePrestigeUpgradeInfo(5)" class="smallBtn">05</div>
                         </div>
-                        <div style="margin: 3px">
+                        <div style="margin: 3px" class="containerY">
                             <div id="prestigeUpgradeBtn2" onclick="buyPrestigeUpgrade(2)" onmouseover="updatePrestigeUpgradeInfo(2)" class="smallBtn">02</div>
+                            <div id="prestigeUpgradeBtn6" onclick="buyPrestigeUpgrade(6)" onmouseover="updatePrestigeUpgradeInfo(6)" class="smallBtn">06</div>
                         </div>
-                        <div style="margin: 3px">
+                        <div style="margin: 3px" class="containerY">
                             <div id="prestigeUpgradeBtn3" onclick="buyPrestigeUpgrade(3)" onmouseover="updatePrestigeUpgradeInfo(3)" class="smallBtn">03</div>
+                            <div id="prestigeUpgradeBtn7" onclick="buyPrestigeUpgrade(7)" onmouseover="updatePrestigeUpgradeInfo(7)" class="smallBtn">07</div>
                         </div>
-                        <div style="margin: 3px">
+                        <div style="margin: 3px" class="containerY">
                             <div id="prestigeUpgradeBtn4" onclick="buyPrestigeUpgrade(4)" onmouseover="updatePrestigeUpgradeInfo(4)" class="smallBtn">04</div>
                         </div>
                     </div>
@@ -94,23 +123,24 @@
                     <p id="currentEnergySpeedrunDisplay">Current: Speedrun 1</p>
                     <div id="toggleAutoEnergySpeedrunBtn" onclick="toggleBool(player.autoCompleteEnergySpeedrun,'autoCompleteEnergySpeedrun','toggleAutoEnergySpeedrun')" class="smallBtn">Auto-Complete:<span id="toggleAutoEnergySpeedrun">OFF</span></div>
                     
-                    <div class="container" style="height: 100px; width: 90%; border: 2px solid var(--validEdge); border-radius: 5px; padding: 10px; margin: 10px 0px">
+                    <div class="container" style="height: 140px; width: 90%; border: 2px solid var(--validEdge); border-radius: 5px; padding: 10px; margin: 10px 0px">
                         <h3 id="energySpeedrunInfoBoxNum" style="color: var(--altText)">Displaying: Speedrun 1</h3>
-                        <hr style="width: 80%; height: 0px; margin: 5px 0px 15px 0px">
-                        <h4 id="energySpeedrunInfoBoxDesc">Get to 10 EP - Crank</h4>
+                        <hr style="width: 80%; height: 0px; margin: 5px 0px 0px 0px">
+                        <h5 id="energySpeedrunInfoBoxFeatures" style="margin: 5px">Features: Crank</h5>
+                        <h4 id="energySpeedrunInfoBoxDesc">Get to 10 EP</h4>
                         <h4 id="energySpeedrunInfoBoxLim">Time Limit: None</h4>
                         <h4 id="energySpeedrunInfoBoxReward">(Rewards 1 PP)</h4>
                     </div>
                 
                     <div class="containerRow">
-                        <div class="container" style="margin: 3px 5px">
-                            <div onclick="startNewEnergySpeedrun(1)" onmouseover="updateEnergySpeedrunInfo(1)" class="smallBtn">Speedrun 1</div>
-                            <div onclick="startNewEnergySpeedrun(3)" onmouseover="updateEnergySpeedrunInfo(3)" class="smallBtn">Speedrun 3</div>
+                        <div class="containerY" style="margin: 3px 5px">
+                            <div id="energySpeedrunBtn1" onclick="startNewEnergySpeedrun(1)" onmouseover="updateEnergySpeedrunInfo(1)" class="smallBtn">Speedrun 1</div>
+                            <div id="energySpeedrunBtn3" onclick="startNewEnergySpeedrun(3)" onmouseover="updateEnergySpeedrunInfo(3)" class="smallBtn">Speedrun 3</div>
                         </div>
 
-                        <div class="container" style="margin: 3px 5px">
-                            <div onclick="startNewEnergySpeedrun(2)" onmouseover="updateEnergySpeedrunInfo(2)" class="smallBtn">Speedrun 2</div>
-                            <div class="smallBtn">PLACEHOLDER</div>
+                        <div class="containerY" style="margin: 3px 5px">
+                            <div id="energySpeedrunBtn2" onclick="startNewEnergySpeedrun(2)" onmouseover="updateEnergySpeedrunInfo(2)" class="smallBtn">Speedrun 2</div>
+                            <div id="energySpeedrunBtn4" onclick="startNewEnergySpeedrun(4)" onmouseover="updateEnergySpeedrunInfo(4)" class="smallBtn">Speedrun 4</div>
                         </div>
                     </div>
                 </div>
@@ -118,7 +148,12 @@
         </div>
 
         <div id="settingsContainer" class="container">
-            
+            <div class="containerRow">
+                <div class="normBtn" onclick="save()" style="margin: 0px 5px">Save</div>
+                <div class="normBtn" onclick="loadData()" style="margin: 0px 5px">Load</div>
+                <div class="normBtn" onclick="resetSavePrompt()" style="margin: 0px 5px">Reset</div>
+            </div>
+            <div onclick="toggleBool(player.autoSave,'autoSave','toggleAutoSave')" class="normBtn" style="margin: 10px">Automatic Saving:<span id="toggleAutoSave">OFF</span></div>
         </div>
     </div>
 
