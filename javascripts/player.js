@@ -24,7 +24,7 @@ var player = {
     currentEnergySpeedrun: new Decimal("1"),
     runningEnergySpeedrun: true,
     energySpeedrunTimer: false,
-    stateOfEnergySpeedrun: 'none',
+    stateOfEnergySpeedrun: 'running',
     energyPointMult: new Decimal(1),
     energyGenMult: new Decimal(1),
     totalEnergySpeedrunCompletions: new Decimal(0),
@@ -101,7 +101,7 @@ function accessSave(value) {
 function accessSaveNum(value) {
     if (typeof saveGame[value] !== "undefined") player[value] = new Decimal(saveGame[value]);
     else {
-        console.log(value + ' broke');
+        //console.log(value + ' broke');
     }
 }
 
@@ -122,17 +122,16 @@ function save() {
 
 window.onload = function() {
     if (localStorage.getItem(saveKey) === null) {
-        changeTab('energy');
-        //console.log('autoDefault1');
         localStorage.setItem(saveKey,JSON.stringify(player));
+        changeTab('energy');
+        energySpeedrun1.start();
+        player.stateOfEnergySpeedrun = 'running';
     }
-
     loadData();
 }
 
 function loadData() {
     saveGame = JSON.parse(localStorage.getItem(saveKey));
-    console.log(saveGame.energyPoints);
 
     let autoLoadArr = ['colors','isFirstRun','runningEnergySpeedrun','stateOfEnergySpeedrun','autoCompleteEnergySpeedrun','autoSave'];
     let autoLoadArrNum = ['energyPoints','energyPointGoal','currentEnergySpeedrun','totalEnergySpeedrunCompletions','prestigePoints','prestigeUpgradesUnlocked','energyUpgradesUnlocked','energySpeedrunsUnlocked','energySpeedrun4Completions'];
