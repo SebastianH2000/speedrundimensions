@@ -48,6 +48,16 @@ function mainGameLoop() {
     if (prestigeUpgrade7.bought) {
         player.energyPointMult = Decimal.mul(prestigeUpgrade4.effect,player.energyPointMult);
     }
+    if (prestigeUpgrade8.bought) {
+        flexElement('toggleEnergyGeneratorAutobuyerBtn');
+        if (player.energyGeneratorAutobuyer && energyPointGen.amount.lt(player.energyGeneratorAutobuyerVal)) {
+            energyPointGen.buy();
+        }
+    }
+    else {
+        hideElement('toggleEnergyGeneratorAutobuyerBtn');
+        player.energyGeneratorAutobuyer = false;
+    }
 
     if (player.autoCompleteEnergySpeedrun) {
         if (player.energyPoints.gte(player.energyPointGoal)) {
@@ -64,6 +74,16 @@ function mainGameLoop() {
         energyPointGen.update();
         gainEnergyPoints(energyPointGen.generating.div(50).div(player.energyPointMult));
         player.energyPointGenAmount = energyPointGen.amount;
+    }
+
+    let energyGeneratorAutobuyerAmountTemp = document.getElementById("energyGeneratorAutobuyerAmountInput").value;
+    if (energyGeneratorAutobuyerAmountTemp.length > 0) {
+        player.energyGeneratorAutobuyerVal = new Decimal(parseInt(energyGeneratorAutobuyerAmountTemp));
+        updateText("energyGeneratorAutobuyerAmountDisplay",'(Buys Until You\'ve Reached ' + format(parseInt(energyGeneratorAutobuyerAmountTemp),0) + ' Generators)');
+    }
+    else {
+        player.energyGeneratorAutobuyerVal = new Decimal("0");
+        updateText("energyGeneratorAutobuyerAmountDisplay",'(Buys Until You\'ve Reached 0 Generators)');
     }
 }
 
@@ -164,6 +184,13 @@ function updateDisplay() {
     }
     else {
         player.energySpeedrunTimer = energySpeedrunArr[player.currentEnergySpeedrun.sub(1)].timer;
+    }
+
+    if (player.autoSave) {
+        updateText('settingsTabHeader','Auto-Save: ON');
+    }
+    else {
+        updateText('settingsTabHeader','Auto-Save: OFF');
     }
 }
 

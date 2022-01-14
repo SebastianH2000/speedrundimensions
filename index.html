@@ -33,7 +33,10 @@
                 <p id="prestigePointHeader" style="font-size: 12px; margin: 0px">0.00 PP</p>
                 <div id="prestigeBtn" onclick="changeTab('prestige')" class="smallBtn" style="margin: 5px;">Prestige</div>
             </div>
-            <div id="settingsBtn" onclick="changeTab('settings')" class="smallBtn" style="margin: 21.1px 5px 5px 5px;">Settings</div>
+            <div id="settingsTab" class="container">
+                <p id="settingsTabHeader" style="font-size: 12px; margin: 0px">Auto-Save: OFF</p>
+                <div id="settingsBtn" onclick="changeTab('settings')" class="smallBtn" style="margin: 5px;">Settings</div>
+            </div>
         </div>
 
 
@@ -54,8 +57,15 @@
                 </div>
             </div>
 
+            <div id="toggleEnergyGeneratorAutobuyerBtn" class="container">
+                <div onclick="toggleBool(player.energyGeneratorAutobuyer,'energyGeneratorAutobuyer','toggleEnergyGeneratorAutobuyer')" class="smallBtn" style="margin: 7.5px 0px 0px 0px">Energy Generator Autobuyer:<span id="toggleEnergyGeneratorAutobuyer">OFF</span></div>
+                <p id="energyGeneratorAutobuyerAmountDisplay" style="font-size: 14px;">(Buys Until You've Reached 30 Generators)</p>
+                <input id="energyGeneratorAutobuyerAmountInput" type="number" value="30">
+            </div> 
+
+
             <div id="energyUpgradeContainer" class="container roundBackground">
-                <div class="container" style="height: 140px; width: 90%; border: 2px solid var(--validEdge); border-radius: 5px; padding: 10px; margin: 10px 0px">
+                <div class="container" style="height: 140px; width: 90%; border: 2px solid var(--validEdge); border-radius: 5px; padding: 10px; margin: 0px 0px 10px 0px">
                     <h3 id="energyUpgradeInfoBoxNum" style="color: var(--altText)">Displaying: Upgrade 1</h3>
                     <hr style="width: 80%; height: 0px; margin: 5px 0px 15px 0px">
                     <h4 id="energyUpgradeInfoBoxDesc" style="margin: 0px 0px 5px 0px; width: 100%">Unlocks An Auto-Complete Feature</h4>
@@ -114,6 +124,7 @@
                         </div>
                         <div style="margin: 3px" class="containerY">
                             <div id="prestigeUpgradeBtn4" onclick="buyPrestigeUpgrade(4)" onmouseover="updatePrestigeUpgradeInfo(4)" class="smallBtn">04</div>
+                            <div id="prestigeUpgradeBtn8" onclick="buyPrestigeUpgrade(8)" onmouseover="updatePrestigeUpgradeInfo(8)" class="smallBtn">08</div>
                         </div>
                     </div>
                 </div>

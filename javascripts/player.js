@@ -43,6 +43,7 @@ var player = {
 
     autoSave: false,
     energySpeedrun4Completions: new Decimal("0"),
+    energyGeneratorAutobuyer: false,
 }
 
 
@@ -86,7 +87,8 @@ var prestigeUpgrade4 = new prestigeUpgrade(4,new Decimal(50),true);
 var prestigeUpgrade5 = new prestigeUpgrade(5,new Decimal(250),false);
 var prestigeUpgrade6 = new prestigeUpgrade(6,new Decimal(500),false);
 var prestigeUpgrade7 = new prestigeUpgrade(7,new Decimal("1e4"),false);
-var prestigeUpgradeArr = [prestigeUpgrade1,prestigeUpgrade2,prestigeUpgrade3,prestigeUpgrade4,prestigeUpgrade5,prestigeUpgrade6,prestigeUpgrade7];
+var prestigeUpgrade8 = new prestigeUpgrade(8,new Decimal("1.5e4"),false);
+var prestigeUpgradeArr = [prestigeUpgrade1,prestigeUpgrade2,prestigeUpgrade3,prestigeUpgrade4,prestigeUpgrade5,prestigeUpgrade6,prestigeUpgrade7,prestigeUpgrade8];
 
 
 
@@ -133,7 +135,7 @@ window.onload = function() {
 function loadData() {
     saveGame = JSON.parse(localStorage.getItem(saveKey));
 
-    let autoLoadArr = ['colors','isFirstRun','runningEnergySpeedrun','stateOfEnergySpeedrun','autoCompleteEnergySpeedrun','autoSave'];
+    let autoLoadArr = ['colors','isFirstRun','runningEnergySpeedrun','stateOfEnergySpeedrun','autoCompleteEnergySpeedrun','autoSave','energyGeneratorAutobuyer'];
     let autoLoadArrNum = ['energyPoints','energyPointGoal','currentEnergySpeedrun','totalEnergySpeedrunCompletions','prestigePoints','prestigeUpgradesUnlocked','energyUpgradesUnlocked','energySpeedrunsUnlocked','energySpeedrun4Completions'];
 
     energyPointGen.amount = new Decimal(saveGame.energyPointGenAmount);
@@ -169,6 +171,7 @@ function loadData() {
 
     changeBoolDisplay(player.autoCompleteEnergySpeedrun,'toggleAutoEnergySpeedrun');
     changeBoolDisplay(player.autoSave,'toggleAutoSave');
+    changeBoolDisplay(player.energyGeneratorAutobuyer,'toggleEnergyGeneratorAutobuyer');
     updatePrestigeUpgradeInfo(1);
     updateEnergyUpgradeInfo(1);
     updateEnergySpeedrunInfo(player.currentEnergySpeedrun.toNumber());
@@ -221,6 +224,8 @@ function resetSave() {
     player.energyUpgradesunlocked = new Decimal("4");
     player.energySpeedrunsUnlocked = new Decimal("1");
     player.energySpeedrun4Completions = new Decimal("0");
+    player.energyGeneratorAutobuyer = false;
+    player.energyGeneratorAutoBuyerVal = new Decimal("30");
     for (let i = 0; i < energySpeedrunArr.length; i++) {
         energySpeedrunArr[i].displayed = false;
     }
@@ -247,6 +252,7 @@ function resetSave() {
 
     changeBoolDisplay(player.autoCompleteEnergySpeedrun,'toggleAutoEnergySpeedrun');
     changeBoolDisplay(player.autoSave,'toggleAutoSave');
+    changeBoolDisplay(player.energyGeneratorAutobuyer,'toggleEnergyGeneratorAutobuyer');
     updatePrestigeUpgradeInfo(1);
     updateEnergyUpgradeInfo(1);
     updateEnergySpeedrunInfo(1);

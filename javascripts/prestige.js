@@ -26,7 +26,7 @@ function updateEnergySpeedrunInfo(num) {
     let speedrunOneInfo = ['Features Allowed: Crank', 'Get to 10 EP','Time Limit: None','(Rewards 1 PP)'];
     let speedrunTwoInfo = ['Features Allowed: Crank + Generators', 'Get to 1e3 EP','Time Limit: 1 Min','(Rewards 10 PP)'];
     let speedrunThreeInfo = ['Features Allowed: Free Generators', 'Get to 250 EP','Time Limit: 30 Secs','(Rewards 25 PP)'];
-    let speedrunFourInfo = ['Features Allowed: Generators + Upgrades', 'Get to 1e6 EP','Time Limit: 2 Mins','(Rewards 1e3 PP)'];
+    let speedrunFourInfo = ['Features Allowed: Generators + Upgrades', 'Get to 1e6 EP','Time Limit: 1 Min','(Rewards 1e3 PP)'];
     let speedrunTotalArr = [speedrunOneInfo,speedrunTwoInfo,speedrunThreeInfo,speedrunFourInfo];
     updateContent('energySpeedrunInfoBoxNum','Displaying: Speedrun ' + num);
     updateContent('energySpeedrunInfoBoxFeatures',speedrunTotalArr[num - 1][0]);
@@ -38,10 +38,11 @@ function updateEnergySpeedrunInfo(num) {
 function startNewEnergySpeedrun(num) {
     //player.currentEnergySpeedrun = new Decimal(num);
     energySpeedrunArr[num - 1].start();
+    changeTab('energy');
 }
 
 function updatePrestigeUpgradeInfo(num) {
-    let prestigeUpgradeInfoArr = ['Unlocks An Auto-Complete Feature', 'Doubles The Production Of <br> The Energy Generators', 'Start Speedruns With 1 Free Generator', 'Adds An Energy Gain Bonus Based <br> On Total Speedrun Completions', 'Every Power Of 10 PP <br> Gives You 1 Free Generator', 'Your Energy Points Create <br> A Boost To Energy Gain','Your Completions Of Energy Speedrun 4 <br> Create A Boost To Energy Gain'];
+    let prestigeUpgradeInfoArr = ['Unlocks An Auto-Complete Feature', 'Doubles The Production Of <br> The Energy Generators', 'Start Speedruns With 1 Free Generator', 'Adds An Energy Gain Bonus Based <br> On Total Speedrun Completions', 'Every Power Of 10 PP <br> Gives You 1 Free Generator', 'Your Energy Points Create <br> A Boost To Energy Gain','Your Completions Of Energy Speedrun 4 <br> Create A Boost To Energy Gain','Unlocks An Energy Generator Autobuyer'];
     
     updateContent('prestigeUpgradeInfoBoxNum','Displaying: Upgrade ' + num);
     updateContent('prestigeUpgradeInfoBoxDesc',prestigeUpgradeInfoArr[num - 1]);

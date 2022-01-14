@@ -213,7 +213,6 @@ class energySpeedrun {
         energySpeedrunArr[this.speedrunNum.sub(1)].start();
 
         if ((this.realNum + 1) > player.energySpeedrunsUnlocked.toNumber() && (this.realNum + 1) <= energySpeedrunArr.length) {
-            console.log(this.realNum + 1);
             player.energySpeedrunsUnlocked = new Decimal(this.realNum + 1);
         }
 
@@ -225,10 +224,10 @@ class energySpeedrun {
         }
 
         if (this.realNum === 4 && player.prestigeUpgradesUnlocked.lt(8)) {
-            player.prestigeUpgradesUnlocked = new Decimal("7");
+            player.prestigeUpgradesUnlocked = new Decimal("8");
 
             prestigeUpgrade7.displayed = true;
-            //prestigeUpgrade8.displayed = true;
+            prestigeUpgrade8.displayed = true;
         }
 
         if (this.realNum === 4) {
