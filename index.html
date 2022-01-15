@@ -20,7 +20,6 @@
 
     gtag('config', 'UA-186350227-2');
     </script>
-
 </head>
 <body>
     <div id="gameWindow">
@@ -37,6 +36,14 @@
                 <p id="settingsTabHeader" style="font-size: 12px; margin: 0px">Auto-Save: OFF</p>
                 <div id="settingsBtn" onclick="changeTab('settings')" class="smallBtn" style="margin: 5px;">Settings</div>
             </div>
+            <div id="tutorialTab" class="container">
+                <p style="font-size: 12px; margin: 0px; color: var(--background)">Mo' Secretsss</p>
+                <div id="tutorialBtn" onclick="changeTab('tutorial')" class="smallBtn" style="margin: 5px;">Tutorial</div>
+            </div>
+            <div id="winTab" class="container" style="color: var(--wonText)">
+                <p style="font-size: 12px; margin: 0px; color: var(--background)">Secretsss</p>
+                <div id="winBtn" onclick="changeTab('win')" class="smallBtn" style="margin: 5px; background-color: var(--wonFill);">You Won</div>
+            </div>
         </div>
 
 
@@ -47,7 +54,8 @@
 
             <h2 id="energyPointGoalDisplay" onclick="completeEnergyPointGoal()" style="margin: 0px 0px 10px 0px">Current Energy Goal: 10 Energy Points</h2>
             <h3 id="energyPointDisplay" style="margin: 0px 0px 20px 0px">You Have 0.0 Energy Points</h3>
-            <div id="energyPointCrank" onclick="gainEnergyPoints(new Decimal(1))" class="normBtn" style="margin: 0px 0px 10px 0px">Energy Crank <br> <span id="energyPointCrankDisplay">Gain 1.0 Energy Point</span></div>
+            <div id="energyPointCrank" onclick="gainEnergyPoints(new Decimal(1).mul(energyPointCrankMult),'click')" class="normBtn" style="margin: 0px 0px 15px 0px">Energy Crank - <br> <span id="energyPointCrankDisplay">Gain 1.0 Energy Point</span></div>
+            <div id="autoCrankDisplay" onclick="toggleBool(player.autoCrank,'autoCrank','toggleAutoCrank')" class="smallBtn" style="margin: 7.5px 0px 15px 0px">Auto-Crank:<span id="toggleAutoCrank">OFF</span></div>
             <div class="containerRow">
                 <div id="energyPointGenButton" onclick="energyPointGen.buy()" class="container smallBtn" style="padding: 0px; font-size: 14px;">
                     <p style="margin: 2px 0px; font-size: 20px;">Energy Point Generator</p>
@@ -77,15 +85,19 @@
                 <div class="containerRow">
                     <div style="margin: 3px" class="container">
                         <div id="energyUpgradeBtn1" onclick="buyEnergyUpgrade(1)" onmouseover="updateEnergyUpgradeInfo(1)" class="smallBtn">01</div>
+                        <div id="energyUpgradeBtn5" onclick="buyEnergyUpgrade(5)" onmouseover="updateEnergyUpgradeInfo(5)" class="smallBtn">05</div>
                     </div>
                     <div style="margin: 3px" class="container">
                         <div id="energyUpgradeBtn2" onclick="buyEnergyUpgrade(2)" onmouseover="updateEnergyUpgradeInfo(2)" class="smallBtn">02</div>
+                        <div id="energyUpgradeBtn6" onclick="buyEnergyUpgrade(6)" onmouseover="updateEnergyUpgradeInfo(6)" class="smallBtn">06</div>
                     </div>
                     <div style="margin: 3px" class="container">
                         <div id="energyUpgradeBtn3" onclick="buyEnergyUpgrade(3)" onmouseover="updateEnergyUpgradeInfo(3)" class="smallBtn">03</div>
+                        <div id="energyUpgradeBtn7" onclick="buyEnergyUpgrade(7)" onmouseover="updateEnergyUpgradeInfo(7)" class="smallBtn">07</div>
                     </div>
                     <div style="margin: 3px" class="container">
                         <div id="energyUpgradeBtn4" onclick="buyEnergyUpgrade(4)" onmouseover="updateEnergyUpgradeInfo(4)" class="smallBtn">04</div>
+                        <div id="energyUpgradeBtn8" onclick="buyEnergyUpgrade(8)" onmouseover="updateEnergyUpgradeInfo(8)" class="smallBtn">08</div>
                     </div>
                 </div>
             </div>
@@ -101,7 +113,7 @@
                 <div class="roundBackground container">
                     <h2>Prestige Shop</h2>
                     <hr style="width: 80%; height: 0px; margin: 10px 0px 10px 0px">
-                    <div class="container" style="height: 140px; width: 90%; border: 2px solid var(--validEdge); border-radius: 5px; padding: 10px; margin: 10px 0px">
+                    <div class="container" style="height: 160px; width: 90%; border: 2px solid var(--validEdge); border-radius: 5px; padding: 10px; margin: 10px 0px">
                         <h3 id="prestigeUpgradeInfoBoxNum" style="color: var(--altText)">Displaying: Upgrade 1</h3>
                         <hr style="width: 80%; height: 0px; margin: 5px 0px 15px 0px">
                         <h4 id="prestigeUpgradeInfoBoxDesc" style="margin: 0px 0px 5px 0px; width: 100%">Unlocks An Auto-Complete Feature</h4>
@@ -113,18 +125,22 @@
                         <div style="margin: 3px" class="containerY">
                             <div id="prestigeUpgradeBtn1" onclick="buyPrestigeUpgrade(1)" onmouseover="updatePrestigeUpgradeInfo(1)" class="smallBtn">01</div>
                             <div id="prestigeUpgradeBtn5" onclick="buyPrestigeUpgrade(5)" onmouseover="updatePrestigeUpgradeInfo(5)" class="smallBtn">05</div>
+                            <div id="prestigeUpgradeBtn9" onclick="buyPrestigeUpgrade(9)" onmouseover="updatePrestigeUpgradeInfo(9)" class="smallBtn">09</div>
                         </div>
                         <div style="margin: 3px" class="containerY">
                             <div id="prestigeUpgradeBtn2" onclick="buyPrestigeUpgrade(2)" onmouseover="updatePrestigeUpgradeInfo(2)" class="smallBtn">02</div>
                             <div id="prestigeUpgradeBtn6" onclick="buyPrestigeUpgrade(6)" onmouseover="updatePrestigeUpgradeInfo(6)" class="smallBtn">06</div>
+                            <div id="prestigeUpgradeBtn10" onclick="buyPrestigeUpgrade(10)" onmouseover="updatePrestigeUpgradeInfo(10)" class="smallBtn">10</div>
                         </div>
                         <div style="margin: 3px" class="containerY">
                             <div id="prestigeUpgradeBtn3" onclick="buyPrestigeUpgrade(3)" onmouseover="updatePrestigeUpgradeInfo(3)" class="smallBtn">03</div>
                             <div id="prestigeUpgradeBtn7" onclick="buyPrestigeUpgrade(7)" onmouseover="updatePrestigeUpgradeInfo(7)" class="smallBtn">07</div>
+                            <div id="prestigeUpgradeBtn11" onclick="buyPrestigeUpgrade(11)" onmouseover="updatePrestigeUpgradeInfo(11)" class="smallBtn">11</div>
                         </div>
                         <div style="margin: 3px" class="containerY">
                             <div id="prestigeUpgradeBtn4" onclick="buyPrestigeUpgrade(4)" onmouseover="updatePrestigeUpgradeInfo(4)" class="smallBtn">04</div>
                             <div id="prestigeUpgradeBtn8" onclick="buyPrestigeUpgrade(8)" onmouseover="updatePrestigeUpgradeInfo(8)" class="smallBtn">08</div>
+                            <div id="prestigeUpgradeBtn12" onclick="buyPrestigeUpgrade(12)" onmouseover="updatePrestigeUpgradeInfo(12)" class="smallBtn">12</div>
                         </div>
                     </div>
                 </div>
@@ -147,11 +163,13 @@
                         <div class="containerY" style="margin: 3px 5px">
                             <div id="energySpeedrunBtn1" onclick="startNewEnergySpeedrun(1)" onmouseover="updateEnergySpeedrunInfo(1)" class="smallBtn">Speedrun 1</div>
                             <div id="energySpeedrunBtn3" onclick="startNewEnergySpeedrun(3)" onmouseover="updateEnergySpeedrunInfo(3)" class="smallBtn">Speedrun 3</div>
+                            <div id="energySpeedrunBtn5" onclick="startNewEnergySpeedrun(5)" onmouseover="updateEnergySpeedrunInfo(5)" class="smallBtn">Speedrun 5</div>
                         </div>
 
                         <div class="containerY" style="margin: 3px 5px">
                             <div id="energySpeedrunBtn2" onclick="startNewEnergySpeedrun(2)" onmouseover="updateEnergySpeedrunInfo(2)" class="smallBtn">Speedrun 2</div>
                             <div id="energySpeedrunBtn4" onclick="startNewEnergySpeedrun(4)" onmouseover="updateEnergySpeedrunInfo(4)" class="smallBtn">Speedrun 4</div>
+                            <div id="energySpeedrunBtn6" onclick="startNewEnergySpeedrun(6)" onmouseover="updateEnergySpeedrunInfo(6)" class="smallBtn">Speedrun 6</div>
                         </div>
                     </div>
                 </div>
@@ -164,7 +182,113 @@
                 <div class="normBtn" onclick="loadData()" style="margin: 0px 5px">Load</div>
                 <div class="normBtn" onclick="resetSavePrompt()" style="margin: 0px 5px">Reset</div>
             </div>
-            <div onclick="toggleBool(player.autoSave,'autoSave','toggleAutoSave')" class="normBtn" style="margin: 10px">Automatic Saving:<span id="toggleAutoSave">OFF</span></div>
+            <div onclick="toggleBool(player.autoSave,'autoSave','toggleAutoSave')" class="normBtn" style="margin: 10px 10px 20px 10px">Automatic Saving:<span id="toggleAutoSave">OFF</span></div>
+            <p id="zoomDisplay">Scaling: 1x</p>
+            <input onclick="zoomSliderChange()" type="range" min="50" max="200" value="100" class="slider" id="zoomSlider" style="width: 200px">
+            <div onclick="resetScale()" class="smallBtn" style="margin: 10px">Reset Scale</div>
+        </div>
+
+        <div id="tutorialContainer" class="container">
+            <h2>Simple Overview</h2>
+            <p style="font-size: 14px; margin: 3px;">EP - Energy Points, PP - Prestige Points</p>
+            <p style="font-size: 16px; margin: 10px 3px 3px 3px;">This game has "speedruns"!</p>
+            <p style="font-size: 16px; margin: 3px;">These are just little challenges with a time limit and an Energy Point goal</p>
+            <p style="font-size: 16px; margin: 3px;">To gain energy you can turn the crank, other means of generation are unlocked later on</p>
+            <p style="font-size: 16px; margin: 3px;">If you beat one you are rewarded some 'Prestige Points' <br> (you can spend these in the Prestige Upgrades menu)</p>
+            <p style="font-size: 16px; margin: 3px;">You can select a certain speedrun in the Prestige Tab</p>
+            <p style="font-size: 16px; margin: 3px;">Completing a speedrun unlocks a new speedrun and some Prestige Upgrades!</p>
+            <p style="font-size: 14px; margin: 3px 3px 30px 3px;">(Autosave is off by default, go ahead and turn it on in the Settings tab!)</p>
+
+            <h2>Complete Guide</h2>
+            <div onclick="toggleGuide()" class="smallBtn" style="margin: 10px 0px">Reveal Guide <br> (Contains Spoilers)</div>
+            <div id="guideContainer" class="container">
+                <h3>Completing Speedrun 1</h3>
+                <p style="font-size: 16px; margin: 3px;">Go to the energy tab and click the 'Energy Crank' a few times to get 10 Energy Points.</p>
+                <p style="font-size: 16px; margin: 3px;">Now click the 'Complete Energy Goal' button to complete the current speedrun and gain 1 Prestige Point.</p>
+                <p style="font-size: 16px; margin: 3px;">This will bring you to the Prestige Tab, Prestige Points <br> are meta-currency that you can spend on Prestige Upgrades.</p>
+                <p style="font-size: 16px; margin: 3px;">Now you can go back to the Energy Tab and keep completing runs!</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">I would recommend you get the Prestige Upgrade 1 soon, <br> this will click the option to automate speedrun completions.</p>
+                <p style="font-size: 16px; margin: 3px 3px 20px 3px;">(The button-toggle for this auto-complete is located <br> above the speedrun display in the Prestige tab.</p>
+            
+                <h3>Completing Speedrun 2</h3>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">I would wait to attempt this speedrun until you have bought <br> Prestige Upgrades 1 & 2, and you have over 10 PP.</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Once each generator produces ~4 EP per second, <br> this speedrun shouldn't be too difficult.</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Quickly turn the energy crank and buy some generators, <br> you want at least 7 generators before 40 seconds are up!</p>
+                <p style="font-size: 16px; margin: 3px 3px 20px 3px;">From there it should just be a waiting game, <br> if you want to play less actively get more PP before trying this speedrun.</p>
+            
+                <h3>Completing Speedrun 3</h3>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">This speedrun takes away your energy crank, <br> and doesn't let you buy any energy generators</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">How is it possible? Prestige Upgrade 3 gives you a free generator!</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Once you are getting over 8.5 EP per second from your generator this should be possible.</p>
+                <p style="font-size: 14px; margin: 3px 3px 20px 3px;">(Getting Prestige Upgrade 4 really helps for this speedrun and onwards!)</p>
+
+                <h3>Completing Speedrun 4</h3>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">This speedrun unlocks a new mechanic - Energy Upgrades!</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Before beating this speedrun there is a bit of a timewall, <br> you'll need Prestige Upgrades 5 & 6 to beat it!</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Keep running Speedrun 3 until you have Prestige Upgrades 1-6 and ~5e3 PP!</p>
+                <p style="font-size: 16px; margin: 3px 3px 10px 3px;">Now with proper timing you can beat this, <br> or you can get some more PP first for a less active approach!</p>
+                
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Buy Energy Upgrade 1 right off of the bat!</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Then buy ~12 generators and buy Energy Upgrade 2.</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Buy up to ~22 generators and then buy Energy Upgrade 3.</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Buy up to ~26 generators and there should be 30 seconds left; <br> just enough time to finish!</p>
+                <p style="font-size: 16px; margin: 3px 3px 20px 3px;">(For this speedrun DON'T buy Energy Upgrade 4)</p>
+
+                <h3>Completing Speedrun 5</h3>
+                <p style="font-size: 16px; margin: 3px 3px 10px 3px;">Keep running Speedrun 4 and Speedrun 3 while saving up for Prestige Upgrades 7-9.</p>
+                
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">After you have: <br> a ~1.5x mult from Prestige Upgrade 7, <br> bought Prestige Upgrades 7-9, <br> and ~1e4 PP, <br> you can attempt this speedrun!</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Set your generator autobuyer to ~22 and keep clicking the energy crank.</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">You have a full minute to finish, <br> so you don't need to click too fast, <br> but this definitely will require some clicking.</p>
+                <p style="font-size: 16px; margin: 3px 3px 20px 3px;">As soon as you have 5e4 PP buy the Prestige Upgrade 10 <br> and turn the auto crank on. <br> Now this speedrun is your most productive one yet!</p>
+
+                <h3>Completing Speedrun 6</h3>
+                <h4>(And The Game!)</h4>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Make sure that you've run Speedrun 4 a bunch <br> to get a nice boost from Prestige Upgrade 7.</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">After Prestige Upgrade 7's boost is ~1.75, <br> work on getting all of the Prestige Upgrades!</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">After you have all of these try to get around ~2.5e5 PP.</p>
+                <p style="font-size: 16px; margin: 3px 3px 10px 3px;">Now you're ready for the challenge!</p>
+
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">First off, turn Auto-Crank on and your generator autobuyer to ~53.</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Repeat the steps in Speedrun 4 at the beginning!</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Buy Energy Upgrade 4 as quickly as possible, <br> then buy Energy Upgrades 5 & 6 soon afterwards.</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">Once you've reached ~53 energy generators, <br> and you've bought Energy Upgrade 7, <br> click the Energy Crank a lot to get a manual click bonus!</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">As soon as you can afford Energy Upgrade 8 - get it!</p>
+                <p style="font-size: 16px; margin: 3px 3px 3px 3px;">After you have Energy Upgrade 8 click the Energy Crank as fast as possible!</p>
+                <p style="font-size: 16px; margin: 3px 3px 20px 3px;">When you've reached 1e12 (One trillion!) Energy Points <br> you can manually click the 'You Win' button that pops up!</p>
+                <h3 style="margin: 0px 0px 20px 0px">If you've gotten this far, congrats! And - thanks for playing! :3</h3>
+            </div>
+        </div>
+
+        <div id="winContainer" class="container">
+            <div class="roundBackground container" style="background-color: var(--wonFill); color: var(--wonText); margin: 20px 0px 20px 0px">
+                <h1 style="font-size: 60px; font-weight: 900; margin: 5px">YOU WON</h1>
+                <h2 style="margin: 0px 0px 20px 0px">Thank You For Playing!</h2>
+                <h2>Your Current Time:</h2>
+                <h2 id="timeTimerDisplay" style="margin: 0px 0px 10px 0px">0d 0h 0m 0s 0ms</h2>
+                <h2>Your Speedrun Time:</h2>
+                <h2 id="winTimerDisplay">0d 0h 0m 0s 0ms</h2>
+            </div>
+            <h2>External Links</h2>
+            <hr style="width: 80%; height: 0px; margin: 5px 0px 5px 0px">
+
+            <p style="margin: 10px 0px 0px 0px;">IGJ Stuff:</p>
+            <p style="font-size: 14px">(IGJ - Incremental Game Jam)</p>
+            <div class="containerRow">
+                <div onclick="inviteToIGJDiscord()" class="smallBtn" style="width: 200px; margin: 0px 10px">IGJ Discord</div>
+                <div onclick="inviteToIGJItch()" class="smallBtn" style="width: 200px; margin: 0px 10px">IGJ 2022 Itch.io</div>
+            </div>
+
+            <p style="margin: 15px 0px 10px 0px">My Stuff:</p>
+            <div class="containerRow" style="margin: 0px 0px 20px 0px">
+                <div onclick="inviteToMyDiscord()" class="smallBtn" style="width: 200px; margin: 0px 10px">My Discord Server</div>
+                <div onclick="inviteToMyGithub()" class="smallBtn" style="width: 200px; margin: 0px 10px">Github Version</div>
+            </div>
+
+            <a id="hiddenDiscordLink" href="https://discord.gg/XNmbYaaqje" target="_blank"></a>
+            <a id="hiddenGithubLink" href="https://sebastianh2000.github.io/speedrundimensions/" target="_blank"></a>
+            <a id="hiddenIGJDiscordLink" href="https://discord.gg/YE8PSQPVhN" target="_blank"></a>
+            <a id="hiddenIGJItchLink" href="https://itch.io/jam/new-years-incremental-game-jam" target="_blank"></a>
         </div>
     </div>
 
@@ -180,5 +304,4 @@
     <script type="text/javascript" src="javascripts/energy.js"></script>
     <script type="text/javascript" src="javascripts/prestige.js"></script>
     <script type="text/javascript" src="javascripts/loop.js"></script>
-    <script type="text/javascript" src="javascripts/display.js"></script>
 </body>

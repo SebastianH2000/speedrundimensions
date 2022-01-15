@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function mainLoop() {
         elapsedTime += Date.now() - currentTime;
         currentTime = Date.now();
-        if (elapsedTime > 100) { elapsedTime = 100 };
+        if (elapsedTime > 120000) { elapsedTime = 120000 };
         while (elapsedTime > 20) {
             elapsedTime -= 20;
             //do stuff
@@ -17,20 +17,29 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+let autoCrankTimer = 0.2;
+
 function mainGameLoop() {
+    player.timeTimer = player.timeTimer.add(0.02);
+    if (!player.hasWon) {
+        player.winTimer = player.winTimer.add(0.02);
+    }
     energyUpgrade1.effectSet(new Decimal(new Decimal(1.05).pow(energyPointGen.amount)));
     energyUpgrade4.effectSet(player.prestigeBoost);
+    energyUpgrade5.effectSet(Decimal.max(Decimal.log10(Decimal.max(player.totalEnergySpeedrunCompletions,1)),1));
+    energyUpgrade6.effectSet(energyPointCrankMult);
 
     prestigeUpgrade2.effectSet(new Decimal("2"));
     prestigeUpgrade4.effectSet(Decimal.max(Decimal.log10(Decimal.max(player.totalEnergySpeedrunCompletions,1)),1));
     prestigeUpgrade5.effectSet(Decimal.floor(Decimal.add(Decimal.log10(new Decimal.max(player.prestigePoints,1)),1)));
-    energySpeedrunRewards = [1,10,25,1000];
+    energySpeedrunRewards = [1,10,25,1000,10000,1000000];
     player.prestigeBoost = Decimal.add(Decimal.log10(new Decimal.max(player.prestigePoints,1)),1);
 
     //energy boost
     //energy breaks into negative trillions after buying energy boost and going into speedruns 2-4
     prestigeUpgrade6.effectSet(Decimal.add(Decimal.log10(new Decimal.max(player.energyPoints,1)),1));
     prestigeUpgrade7.effectSet(Decimal.add(Decimal.div(Decimal.log10(new Decimal.max(player.energySpeedrun4Completions,1)),2),1));
+    prestigeUpgrade12.effectSet(Decimal.add(Decimal.div(Decimal.log10(new Decimal.max(player.manualCranks,1)),2),1));
     if (prestigeUpgrade6.bought) {
         player.energyBoost = prestigeUpgrade6.effect;
     }
@@ -46,9 +55,15 @@ function mainGameLoop() {
         player.energyPointMult = Decimal.mul(prestigeUpgrade4.effect,player.energyPointMult).mul(player.energyBoost);
     }
     if (prestigeUpgrade7.bought) {
-        player.energyPointMult = Decimal.mul(prestigeUpgrade4.effect,player.energyPointMult);
+        player.energyPointMult = Decimal.mul(prestigeUpgrade7.effect,player.energyPointMult);
     }
-    if (prestigeUpgrade8.bought) {
+    if (prestigeUpgrade12.bought) {
+        player.energyPointMult = Decimal.mul(prestigeUpgrade12.effect,player.energyPointMult);
+    }
+    if (energyUpgrade5.bought) {
+        player.energyPointMult = Decimal.mul(energyUpgrade5.effect,player.energyPointMult);
+    }
+    if (prestigeUpgrade8.bought && (player.currentEnergySpeedrun.toNumber() === 6 || player.currentEnergySpeedrun.toNumber() === 5 || player.currentEnergySpeedrun.toNumber() === 4 || player.currentEnergySpeedrun.toNumber() === 2)) {
         flexElement('toggleEnergyGeneratorAutobuyerBtn');
         if (player.energyGeneratorAutobuyer && energyPointGen.amount.lt(player.energyGeneratorAutobuyerVal)) {
             energyPointGen.buy();
@@ -58,8 +73,49 @@ function mainGameLoop() {
         hideElement('toggleEnergyGeneratorAutobuyerBtn');
         player.energyGeneratorAutobuyer = false;
     }
+    if (prestigeUpgrade9.bought) {
+        energyPointCrankMult = Decimal.max(energyPointGen.amount,1).mul(5);
+    }
+    else {
+        energyPointCrankMult = new Decimal("1");
+    }
+    if (energyUpgrade6.bought) {
+        energyPointCrankMult = Decimal.pow(energyPointCrankMult,2);
+    }
+    prestigeUpgrade9.effectSet(energyPointCrankMult);
+    if (prestigeUpgrade10.bought) {
+        flexElement('autoCrankDisplay');
+        if (player.autoCrank) {
+            if (autoCrankTimer <= 0) {
+                gainEnergyPoints(new Decimal(1).mul(energyPointCrankMult));
+                autoCrankTimer = 0.2;
+            }
+            autoCrankTimer -= 1/50;
+        }
+        else {
+            autoCrankTimer = 0.2;
+        }
+    }
+    else {
+        hideElement('autoCrankDisplay');
+        player.autoCrank = false;
+        autoCrankTimer = 0.2;
+    }
+    if (prestigeUpgrade11.bought && player.currentTab === 'energy') {
+        energyUpgrade5.displayed = true;
+        energyUpgrade6.displayed = true;
+        energyUpgrade7.displayed = true;
+        energyUpgrade8.displayed = true;
+    }
+    else {
+        energyUpgrade5.displayed = false;
+        energyUpgrade6.displayed = false;
+        energyUpgrade7.displayed = false;
+        energyUpgrade8.displayed = false;
+    }
 
-    if (player.autoCompleteEnergySpeedrun) {
+
+    if (player.autoCompleteEnergySpeedrun && player.currentEnergySpeedrun.toNumber() !== 6) {
         if (player.energyPoints.gte(player.energyPointGoal)) {
             energyPointGoalCompleted();
         }
@@ -70,8 +126,8 @@ function mainGameLoop() {
     }
 
     //energy gen calc
+    energyPointGen.update();
     if (player.stateOfEnergySpeedrun === 'running') {
-        energyPointGen.update();
         gainEnergyPoints(energyPointGen.generating.div(50).div(player.energyPointMult));
         player.energyPointGenAmount = energyPointGen.amount;
     }
@@ -87,10 +143,79 @@ function mainGameLoop() {
     }
 }
 
+document.getElementById('zoomSlider').oninput = function() {
+    updateText('zoomDisplay','Scaling: ' + (document.getElementById('zoomSlider').value/100) + 'x');
+}
+
+function zoomSliderChange() {
+    player.zoomAmount = document.getElementById('zoomSlider').value/100;
+}
+
+function resetScale() {
+    player.zoomAmount = 1;
+    document.getElementById('zoomSlider').value = '100';
+}
+
 function updateDisplay() {
+    if (player.zoomAmount*100 === document.getElementById('zoomSlider').value * 1) {
+        updateText('zoomDisplay','Scaling: ' + player.zoomAmount + 'x');
+    }
+
+
+
+    if (player.currentTab === 'win') {
+        let timeTimerDuration = player.timeTimer.toNumber();
+        let d = Math.floor(timeTimerDuration / 86400);
+        let h = Math.floor(timeTimerDuration % 86400 / 3600);
+        let m = Math.floor(timeTimerDuration % 3600 / 60);
+        let s = Math.floor(timeTimerDuration % 3600 % 60);
+        let ms = (timeTimerDuration % 1).toFixed(3);
+        updateText('timeTimerDisplay',d + 'd ' + h + 'h ' + m + 'm ' + s + 's ' + pad((ms * 1000),3) + 'ms');
+        let winTimerDuration = player.winTimer.toNumber();
+        let wind = Math.floor(winTimerDuration / 86400);
+        let winh = Math.floor(winTimerDuration % 86400 / 3600);
+        let winm = Math.floor(winTimerDuration % 3600 / 60);
+        let wins = Math.floor(winTimerDuration % 3600 % 60);
+        let winms = (winTimerDuration % 1).toFixed(3);
+        updateText('winTimerDisplay',wind + 'd ' + winh + 'h ' + winm + 'm ' + wins + 's ' + pad((winms * 1000),3) + 'ms');
+    }
+
+
+    if (player.guideRevealed) {
+        flexElement('guideContainer');
+    }
+    else {
+        hideElement('guideContainer');
+    }
+
+    for (const key in player.colors) {
+        updateColor(`${key}`);
+    }
+    player.colors['wonFill'] = hslToHex((player.timeTimer % 360)*10,100,30);
+    player.colors['wonText'] = hslToHex((player.timeTimer % 360)*10,100,50);
+    player.colors['wonEdge'] = hslToHex((player.timeTimer % 360)*10,100,70);
+
+    if (player.hasWon) {
+        flexElement('winTab');
+    }
+    else {
+        hideElement('winTab');
+    }
+
+    if (energySpeedrunArr[player.currentEnergySpeedrun.sub(1).toNumber()].featuresAllowed[1] && player.currentTab === 'energy') {
+        energyPointGen.displayed = true;
+        energyPointGen.update();
+    }
+
+
     //energy updates
     if (player.currentTab === 'energy') {
-        if (player.energyPoints.greaterThanOrEqualTo(player.energyPointGoal) && player.stateOfEnergySpeedrun === 'running') {
+        if (player.energyPoints.greaterThanOrEqualTo(player.energyPointGoal) && player.currentEnergySpeedrun.toNumber() === 6) {
+            addClass('energyPointGoalDisplay','normBtn');
+            updateText('energyPointGoalDisplay','You Win!');
+        }
+        else {
+        if (player.energyPoints.greaterThanOrEqualTo(player.energyPointGoal) && player.stateOfEnergySpeedrun === 'running' && (!player.autoCompleteEnergySpeedrun || player.currentEnergySpeedrun.toNumber() === 6)) {
             addClass('energyPointGoalDisplay','normBtn');
             updateText('energyPointGoalDisplay',('Complete This Speedrun (Goal: ' + format(player.energyPointGoal,2) + ' EP)'));
         }
@@ -104,8 +229,16 @@ function updateDisplay() {
             updateText('energyPointGoalDisplay',('Speedrun Failed - Click To Reset Speedrun'));
             addClass('energyPointGoalDisplay','normBtn');
         }
+        }
         updateText('energyPointDisplay',('You Have ' + format(player.energyPoints,2) + ' Energy Points'));
-        updateText('energyPointCrankDisplay',('Gain ' + format(player.energyPointMult,2) + ' Energy Points'));
+        let manualCrankMult = new Decimal(1);
+        if (energyUpgrade7.bought) {
+            manualCrankMult = manualCrankMult.mul(10);
+        }
+        if (energyUpgrade8.bought) {
+            manualCrankMult = manualCrankMult.mul(100);
+        }
+        updateText('energyPointCrankDisplay',('Gain ' + format(player.energyPointMult.mul(energyPointCrankMult).mul(manualCrankMult),2) + ' Energy Points'));
     }
     updateText('energyPointHeader',(format(player.energyPoints,2) + ' EP'));
 
@@ -177,7 +310,7 @@ function updateDisplay() {
     body = doc.getElementsByTagName('body')[0];
     x = win.innerWidth || docElem.clientWidth || body.clientWidth;
     y = win.innerHeight|| docElem.clientHeight|| body.clientHeight;
-    document.getElementById("gameWindow").style.transform = "scale(" + x/1100 + ")";
+    document.getElementById("gameWindow").style.transform = "scale(" + x/1200*player.zoomAmount + ")";
 
     if (energySpeedrunArr[player.currentEnergySpeedrun.sub(1)].maxTimer === false) {
         player.energySpeedrunTimer = false;

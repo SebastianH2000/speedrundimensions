@@ -26,7 +26,7 @@ body {
     flex-direction: column;
     align-items: center;
     margin: 20px 0px 0px 0px;
-    padding: 0px;
+    padding: 20px;
     text-align: center;
     font-family: 'Roboto Mono', monospace;
     user-select: none;
@@ -164,4 +164,7 @@ span {
     --boughtFill: #000000;
     --hoverFill: #000000;
     --fieldBackground: #000000;
+    --wonFill: #000000;
+    --wonEdge: #000000;
+    --wonText: #000000;
 }

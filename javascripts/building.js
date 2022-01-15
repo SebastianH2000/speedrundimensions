@@ -156,6 +156,27 @@ class energySpeedrun {
     }
 
     update() {
+        //case helpers
+        if (this.maxTimer !== false) {
+            if (this.timer.lessThanOrEqualTo(0) || player.stateOfEnergySpeedrun === 'failed') {
+                energyPointGoalFailed();
+                flexElement('energySpeedrunTimer');
+                updateText('energySpeedrunTimer','Speedrun Timer: FAILED');
+                this.reward = energySpeedrunRewards[this.speedrunNum.sub(1)];
+                updateText('energySpeedrunReward','Completing Now Rewards ' + format(this.reward,2) + ' PP');
+            }
+            else {
+                flexElement('energySpeedrunTimer');
+                updateText('energySpeedrunTimer','Speedrun Timer: ' + format(this.timer,2));
+                this.reward = energySpeedrunRewards[this.speedrunNum.sub(1)];
+                updateText('energySpeedrunReward','Completing Now Rewards ' + format(this.reward,2) + ' PP');
+            }
+        }
+        else {
+            hideElement('energySpeedrunTimer');
+            this.reward = energySpeedrunRewards[this.speedrunNum.sub(1)];
+            updateText('energySpeedrunReward','Completing Now Rewards ' + format(this.reward,2) + ' PP');
+        }
         hideElement('noCurrentSpeedrunDisplay');
         if (player.stateOfEnergySpeedrun === 'running') {
             if (player.currentTab === 'energy') {
@@ -177,7 +198,6 @@ class energySpeedrun {
 
 
             if (this.maxTimer !== false) {
-                //console.log('beep')
                 if (this.timer.lessThanOrEqualTo(0)) {
                     energyPointGoalFailed();
                     updateText('energySpeedrunTimer','Speedrun Timer: FAILED');
@@ -201,6 +221,10 @@ class energySpeedrun {
             }
             hideElement('energyContainer');
         }
+
+        if (this.realNum === 6) {
+            updateText('energySpeedrunReward','Complete Within The Time Limit To Win');
+        }
     }
 
     complete() {
@@ -223,15 +247,31 @@ class energySpeedrun {
             prestigeUpgrade6.displayed = true;
         }
 
-        if (this.realNum === 4 && player.prestigeUpgradesUnlocked.lt(8)) {
-            player.prestigeUpgradesUnlocked = new Decimal("8");
+        if (this.realNum === 4 && player.prestigeUpgradesUnlocked.lt(9)) {
+            player.prestigeUpgradesUnlocked = new Decimal("9");
 
             prestigeUpgrade7.displayed = true;
             prestigeUpgrade8.displayed = true;
+            prestigeUpgrade9.displayed = true;
+        }
+
+        if (this.realNum === 5 && player.prestigeUpgradesUnlocked.lt(12)) {
+            player.prestigeUpgradesUnlocked = new Decimal("12");
+
+            prestigeUpgrade10.displayed = true;
+            prestigeUpgrade11.displayed = true;
+            prestigeUpgrade12.displayed = true;
         }
 
         if (this.realNum === 4) {
             player.energySpeedrun4Completions = player.energySpeedrun4Completions.add(1);
+        }
+
+        if (this.realNum === 6) {
+            if (!player.hasWon) {
+                player.hasWon = true;
+                changeTab('win')
+            }
         }
     }
 }

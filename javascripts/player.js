@@ -15,7 +15,10 @@ var player = {
         invalidFill: hslToHex(0,40,30),
         boughtFill: hslToHex(240,40,40),
         hoverFill: hslToHex(0,0,30),
-        fieldBackground: hslToHex(0,0,15)
+        fieldBackground: hslToHex(0,0,15),
+        wonFill: hslToHex(0,100,30),
+        wonEdge: hslToHex(0,100,50),
+        wonText: hslToHex(0,100,70),
     },
 
     energyPointGoal: new Decimal("10"),
@@ -44,10 +47,19 @@ var player = {
     autoSave: false,
     energySpeedrun4Completions: new Decimal("0"),
     energyGeneratorAutobuyer: false,
+
+    autoCrank: false,
+    manualCranks: new Decimal("0"),
+    timeTimer: new Decimal("0"),
+    winTimer: new Decimal("0"),
+    hasWon: false,
+    guideRevealed: false,
+    zoomAmount: 1,
 }
 
 
 
+var energyPointCrankMult = new Decimal("1");
 
 
 
@@ -62,9 +74,14 @@ var energyUpgrade1 = new energyUpgrade(1,new Decimal('1e3'),true);
 var energyUpgrade2 = new energyUpgrade(2,new Decimal('1e4'),true);
 var energyUpgrade3 = new energyUpgrade(3,new Decimal('1e5'),true);
 var energyUpgrade4 = new energyUpgrade(4,new Decimal('1e6'),true);
-var energyUpgradeArr = [energyUpgrade1,energyUpgrade2,energyUpgrade3,energyUpgrade4];
+var energyUpgrade5 = new energyUpgrade(5,new Decimal('1e6'),false);
+var energyUpgrade6 = new energyUpgrade(6,new Decimal('1e6'),false);
+var energyUpgrade7 = new energyUpgrade(7,new Decimal('1e9'),false);
+var energyUpgrade8 = new energyUpgrade(8,new Decimal('2.5e10'),false);
+var energyUpgradeArr = [energyUpgrade1,energyUpgrade2,energyUpgrade3,energyUpgrade4,energyUpgrade5,energyUpgrade6,energyUpgrade7,energyUpgrade8];
 
 energyUpgrade3.effectSet(new Decimal(2));
+energyUpgrade7.effectSet(new Decimal(10));
 
 
 
@@ -74,7 +91,9 @@ var energySpeedrun1 = new energySpeedrun (new Decimal("1"),new Decimal("10"),[tr
 var energySpeedrun2 = new energySpeedrun (new Decimal("2"),new Decimal("1000"),[true,true,false],new Decimal("10"),new Decimal("60"),false);
 var energySpeedrun3 = new energySpeedrun (new Decimal("3"),new Decimal("250"),[false,true,false],new Decimal("25"),new Decimal("30"),false);
 var energySpeedrun4 = new energySpeedrun (new Decimal("4"),new Decimal("1e6"),[false,true,true],new Decimal("1000"),new Decimal("60"),false);
-var energySpeedrunArr = [energySpeedrun1,energySpeedrun2,energySpeedrun3,energySpeedrun4];
+var energySpeedrun5 = new energySpeedrun (new Decimal("5"),new Decimal("1e6"),[true,true,false],new Decimal("1e4"),new Decimal("60"),false);
+var energySpeedrun6 = new energySpeedrun (new Decimal("6"),new Decimal("1e12"),[true,true,true],new Decimal("1e6"),new Decimal("120"),false);
+var energySpeedrunArr = [energySpeedrun1,energySpeedrun2,energySpeedrun3,energySpeedrun4,energySpeedrun5,energySpeedrun6];
 var energySpeedrunRewards = [];
 
 
@@ -87,8 +106,12 @@ var prestigeUpgrade4 = new prestigeUpgrade(4,new Decimal(50),true);
 var prestigeUpgrade5 = new prestigeUpgrade(5,new Decimal(250),false);
 var prestigeUpgrade6 = new prestigeUpgrade(6,new Decimal(500),false);
 var prestigeUpgrade7 = new prestigeUpgrade(7,new Decimal("1e4"),false);
-var prestigeUpgrade8 = new prestigeUpgrade(8,new Decimal("1.5e4"),false);
-var prestigeUpgradeArr = [prestigeUpgrade1,prestigeUpgrade2,prestigeUpgrade3,prestigeUpgrade4,prestigeUpgrade5,prestigeUpgrade6,prestigeUpgrade7,prestigeUpgrade8];
+var prestigeUpgrade8 = new prestigeUpgrade(8,new Decimal("1e4"),false);
+var prestigeUpgrade9 = new prestigeUpgrade(9,new Decimal("1e4"),false);
+var prestigeUpgrade10 = new prestigeUpgrade(10,new Decimal('5e4'),false);
+var prestigeUpgrade11 = new prestigeUpgrade(11,new Decimal("2e5"),false);
+var prestigeUpgrade12 = new prestigeUpgrade(12,new Decimal("2e5"),false);
+var prestigeUpgradeArr = [prestigeUpgrade1,prestigeUpgrade2,prestigeUpgrade3,prestigeUpgrade4,prestigeUpgrade5,prestigeUpgrade6,prestigeUpgrade7,prestigeUpgrade8,prestigeUpgrade9,prestigeUpgrade10,prestigeUpgrade11,prestigeUpgrade12];
 
 
 
@@ -102,9 +125,6 @@ function accessSave(value) {
 
 function accessSaveNum(value) {
     if (typeof saveGame[value] !== "undefined") player[value] = new Decimal(saveGame[value]);
-    else {
-        //console.log(value + ' broke');
-    }
 }
 
 var saveKey = "speedrun-dimensions-save-5"
@@ -128,6 +148,8 @@ window.onload = function() {
         changeTab('energy');
         energySpeedrun1.start();
         player.stateOfEnergySpeedrun = 'running';
+        player.guideRevealed = false;
+        player.hasWon = false;
     }
     loadData();
 }
@@ -135,8 +157,8 @@ window.onload = function() {
 function loadData() {
     saveGame = JSON.parse(localStorage.getItem(saveKey));
 
-    let autoLoadArr = ['colors','isFirstRun','runningEnergySpeedrun','stateOfEnergySpeedrun','autoCompleteEnergySpeedrun','autoSave','energyGeneratorAutobuyer'];
-    let autoLoadArrNum = ['energyPoints','energyPointGoal','currentEnergySpeedrun','totalEnergySpeedrunCompletions','prestigePoints','prestigeUpgradesUnlocked','energyUpgradesUnlocked','energySpeedrunsUnlocked','energySpeedrun4Completions'];
+    let autoLoadArr = ['colors','isFirstRun','runningEnergySpeedrun','stateOfEnergySpeedrun','autoCompleteEnergySpeedrun','autoSave','energyGeneratorAutobuyer', 'autoCrank','hasWon','guideRevealed','zoomAmount'];
+    let autoLoadArrNum = ['energyPoints','energyPointGoal','currentEnergySpeedrun','totalEnergySpeedrunCompletions','prestigePoints','prestigeUpgradesUnlocked','energyUpgradesUnlocked','energySpeedrunsUnlocked','energySpeedrun4Completions','energyGeneratorAutobuyerVal','manualCranks','timeTimer','winTimer'];
 
     energyPointGen.amount = new Decimal(saveGame.energyPointGenAmount);
     for (let i = 0; i < saveGame.energyUpgradeArr.length; i++) {
@@ -154,6 +176,7 @@ function loadData() {
         accessSaveNum(autoLoadArrNum[i]);
     }
     accessSaveNum('energyPoints');
+    document.getElementById('zoomSlider').value = (player.zoomAmount*100).toString();
 
     changeTab(saveGame.currentTab);
 
@@ -171,6 +194,7 @@ function loadData() {
 
     changeBoolDisplay(player.autoCompleteEnergySpeedrun,'toggleAutoEnergySpeedrun');
     changeBoolDisplay(player.autoSave,'toggleAutoSave');
+    changeBoolDisplay(player.autoCrank,'toggleAutoCrank');
     changeBoolDisplay(player.energyGeneratorAutobuyer,'toggleEnergyGeneratorAutobuyer');
     updatePrestigeUpgradeInfo(1);
     updateEnergyUpgradeInfo(1);
@@ -186,9 +210,18 @@ function loadData() {
     for(let i = 0; i < player.energySpeedrunsUnlocked.toNumber(); i++) {
         energySpeedrunArr[i].displayed = true;
     }
+
+    if (player['energyGeneratorAutobuyerVal'] === undefined) {
+        player['energyGeneratorAutobuyerVal'] = new Decimal('30');
+    }
+    document.getElementById("energyGeneratorAutobuyerAmountInput").value = player['energyGeneratorAutobuyerVal'].toNumber();
 }
 
 function resetSave() {
+    player.timeTimer = new Decimal("0");
+    player.winTimer = new Decimal("0");
+    player.guideRevealed = false;
+    player.hasWon = false;
     player.currentTab = 'energy';
 
     player.colors = {
@@ -226,6 +259,7 @@ function resetSave() {
     player.energySpeedrun4Completions = new Decimal("0");
     player.energyGeneratorAutobuyer = false;
     player.energyGeneratorAutoBuyerVal = new Decimal("30");
+    document.getElementById("energyGeneratorAutobuyerAmountInput").value = 30;
     for (let i = 0; i < energySpeedrunArr.length; i++) {
         energySpeedrunArr[i].displayed = false;
     }
@@ -251,6 +285,7 @@ function resetSave() {
     changeTab(player.currentTab);
 
     changeBoolDisplay(player.autoCompleteEnergySpeedrun,'toggleAutoEnergySpeedrun');
+    player.autoSave = false;
     changeBoolDisplay(player.autoSave,'toggleAutoSave');
     changeBoolDisplay(player.energyGeneratorAutobuyer,'toggleEnergyGeneratorAutobuyer');
     updatePrestigeUpgradeInfo(1);
@@ -265,3 +300,22 @@ function resetSavePrompt() {
     }
 }
 
+function toggleGuide() {
+    player.guideRevealed = !player.guideRevealed;
+}
+
+function inviteToMyDiscord() {
+    document.getElementById("hiddenDiscordLink").click();
+}
+
+function inviteToIGJDiscord() {
+    document.getElementById("hiddenIGJDiscordLink").click();
+}
+
+function inviteToMyGithub() {
+    document.getElementById("hiddenGithubLink").click();
+}
+
+function inviteToIGJItch() {
+    document.getElementById("hiddenIGJItchLink").click();
+}
